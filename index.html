@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prague RolePlay</title>
+
+<style>
+:root {
+  --bg: #111710;
+  --panel: #20291f;
+  --green: #879b61;
+  --brown: #59452f;
+  --text: #eeeade;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+a { text-decoration: none; color: inherit; }
+header {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6%;
+  background: #182018;
+  border-bottom: 1px solid #46523c;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo { font-size: 21px; font-weight: bold; letter-spacing: 2px; }
+.logo span { color: #a9bd83; }
+#menuBtn {
+  background: none;
+  color: white;
+  border: 1px solid #667754;
+  font-size: 27px;
+  padding: 4px 13px;
+  cursor: pointer;
+}
+nav {
+  display: none;
+  position: fixed;
+  top: 75px;
+  right: 0;
+  width: 270px;
+  background: #20291f;
+  padding: 18px;
+  z-index: 20;
+}
+nav.open { display: block; }
+nav a {
+  display: block;
+  padding: 17px 8px;
+  border-bottom: 1px solid #46523c;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+nav a:hover { color: #b6ce8d; }
+
+.hero {
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  padding: 8%;
+  background:
+    linear-gradient(90deg, #101710ed, #10171070),
+    url('assets/accident_home.png') center/cover;
+}
+.hero-content { max-width: 650px; }
+.kicker {
+  color: #b4ca8c;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+h1, h2, h3 { text-transform: uppercase; }
+h1 {
+  font-size: clamp(52px, 10vw, 105px);
+  line-height: .9;
+  margin: 22px 0;
+}
+h1 span, h2 span { color: #a7bd7e; }
+p { line-height: 1.8; color: #c1c8bb; }
+.btn {
+  display: inline-block;
+  background: var(--green);
+  color: #111710;
+  padding: 14px 18px;
+  margin: 10px 7px 0 0;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.btn:hover { background: #b4c993; }
+
+section.content {
+  padding: 70px 8%;
+  scroll-margin-top: 80px;
+}
+.intro {
+  max-width: 850px;
+}
+h2 {
+  font-size: clamp(36px, 6vw, 65px);
+  margin: 15px 0;
+}
+.muted { color: #aeb6a7; }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+.gallery img {
+  display: block;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border: 1px solid #46523c;
+}
+.rules {
+  background: #20291f;
+}
+.rule-box {
+  min-height: 160px;
+  padding: 22px;
+  background: #151c15;
+  border-left: 3px solid var(--green);
+  white-space: pre-wrap;
+  line-height: 1.9;
+}
+.team {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 15px;
+}
+.person {
+  background: #20291f;
+  border: 1px solid #46523c;
+  padding: 22px;
+}
+.person small {
+  color: #b4ca8c;
+  letter-spacing: 1px;
+}
+.person h3 { overflow-wrap: anywhere; }
+
+.cta {
+  padding: 55px 8%;
+  text-align: center;
+  background: linear-gradient(110deg, #596b43, #423a2b);
+}
+footer {
+  padding: 25px 8%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: #aeb6a7;
+}
+
+.cookie {
+  position: fixed;
+  z-index: 30;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  max-width: 800px;
+  margin: auto;
+  background: #263126;
+  border: 1px solid #879b61;
+  padding: 20px;
+  box-shadow: 0 5px 30px #0009;
+}
+.cookie p { font-size: 13px; }
+.cookie button {
+  padding: 11px 15px;
+  margin: 4px 6px 0 0;
+  cursor: pointer;
+}
+#accept {
+  background: #a7bd7e;
+  border: 0;
+}
+#reject {
+  background: transparent;
+  border: 1px solid #879b61;
+  color: white;
+}
+
+@media(max-width:600px) {
+  .hero { min-height: 540px; padding: 7%; }
+  section.content { padding: 50px 7%; }
+  .gallery { grid-template-columns: 1fr; }
+  .gallery img { height: 220px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">PRAGUE <span>ROLEPLAY</span></div>
+  <button id="menuBtn" aria-label="Otevřít menu">☰</button>
+</header>
+
+<nav id="menu">
+  <a href="#home">Home</a>
+  <a href="#pravidla">Pravidla</a>
+  <a href="https://discord.gg/MCYBRSv46" target="_blank" rel="noopener">Ilegální DC ↗</a>
+  <a href="#ateam">A-team</a>
+  <a href="#galerie">Fotogalerie</a>
+</nav>
+
+<main>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="kicker">ČESKÝ ROLEPLAY PROJEKT</div>
+    <h1>PRAGUE<br><span>ROLEPLAY</span></h1>
+    <p>Vytvoř si vlastní příběh. Zažij propracovaný roleplay, kde každé rozhodnutí něco znamená.</p>
+    <a class="btn" href="https://discord.gg/MCYBRSv46" target="_blank" rel="noopener">PŘIPOJIT SE NA DISCORD ↗</a>
+    <a class="btn" href="#pravidla">PRAVIDLA PROJEKTU</a>
+  </div>
+</section>
+
+<section class="content intro">
+  <div class="kicker">VÍTEJ V PRAGUE ROLEPLAY</div>
+  <h2>Tvůj příběh.<br><span>Tvoje rozhodnutí.</span></h2>
+  <p>Prague RolePlay je komunitní projekt zaměřený na kvalitní roleplay, spolupráci a realistické herní situace.</p>
+</section>
+
+<section class="content" id="galerie">
+  <div class="kicker">MOMENTKY Z PROJEKTU</div>
+  <h2>Fotogalerie<span>.</span></h2>
+  <div class="gallery">
+    <img src="assets/accident_home.png" alt="Dopravní nehoda">
+    <img src="assets/police_lineup.jpg" alt="Policisté a služební vozidla">
+    <img src="assets/team_banner.png" alt="Roleplay tým">
+    <img src="assets/police_scene.png" alt="Policejní zásah">
+  </div>
+</section>
+
+<section class="content rules" id="pravidla">
+  <div class="kicker">DŮLEŽITÉ INFORMACE</div>
+  <h2>Pravidla <span>projektu.</span></h2>
+
+  <div class="rule-box">
+🟠 
+
+ZÁKLADNÍ INFORMACE
+📄
+Herní pravidla projektu
+INFORMACE NA ZAČÁTEK
+Základní pojmy a pravidla, která využíváme v rámci RolePlay (RP). Na serveru klademe důraz na seriózní a kvalitní RP.
+
+Server ON
+Server je každý den automaticky zapnutý v čase 18:00 - 22:00.
+
+Čas zapnutí serveru si Management vyhrazuje právo změnit podle svých nebo potřeb komunity (např. o víkendu se RP startne dřív a/nebo prodlouží).
+
+Mimo tento nebo daný stanovený čas je zakázáno používat veškeré IC commandy, trestá se.
+
+Obecné zásady
+Dodržování pravidel projektu LastGen je povinností. Porušení může vést k blokaci přístupu.
+
+Vyhrazujeme si právo odepřít přístup k projektu kdykoliv a z jakéhokoliv důvodu. Není nárokem být součástí komunity.
+
+Porušení pravidel jiným hráčem není omluvou pro vaše vlastní prohřešky. Situace řešte pomocí příkazu !mod/!help po ukončení RP scénáře.
+
+Jste zodpovědní za jakékoliv akce, které proběhnou pod vaším účtem – i v případě sdílení PC nebo účtu s jinými osobami.
+
+Povinností hráče je sledovat na Discordu PRAVIDLA UPDATE.
+
+Zakázané chování a činnosti
+Kopírování dokumentů, textů, jakákoliv forma zlodějství, toxické chování nebo reklamní obsah ve hře budou trestány permanentním banem.
+
+Je zakázáno používat cheaty, scripty, externí programy nebo jiné úpravy hry, které poskytují výhodu vůči ostatním hráčům.
+
+Vyhýbání se RP scénářům je zakázáno.
+
+Není povoleno používat vulgární, nevhodná jména nebo názvy obsahující reklamu, a to jak ve hře, tak na Discordu.
+
+Používání slova "Nword" je přísně zakázáno na platformě Discord, uprostřed RP je "Nword" povolený pouze v GangRP. Trestá se permanentním banem.
+
+Chovejte se vhodně k dané situaci a nezkazte RP zážitek ostatním. Rozlišujeme mezi nováčkem a hráčem s neadekvátním přístupem.
+
+V případě bugů:
+
+Pokud bug ovlivňuje hru rozdílně pro obě strany, neERPí se.
+
+Bugy, které hráče NEzvýhodňují, se ERPí.
+
+Je zakázáno jakýmkoliv způsobem obcházet ban (např. tvorbou nových účtů).
+
+Členové státních složek nemají přístup na black market.
+
+Streamování nebo záznam komunikace s administrátory (včetně audia) je zakázáno.
+
+Vydávání se za státní složky (včetně nošení uniforem/nášivek) je zakázáno.
+
+Obecné herní mechaniky a RP pravidla
+CPZ pravidlo: Maximální délka zadržení hráče je 2 hodiny reálného času, během kterých by měl být případ vyřešen.
+
+Vypalování podniků je povoleno pouze po schválení přes ticket. Maximální doba omezení provozu je 3 dny.
+
+Po CK postavy nesmí hráč vstoupit zpět do stejné frakce nebo skupiny po dobu 7 dní.
+
+S multicharem je povoleno mít jednu postavu členem LEO a druhou nelegal. Dbejte na pravidlo METAGAMING.
+
+NOVÉ/UPRAVENÉ PRAVIDLA
+Character Kill
+
+ZÁKLADNÍ PRAVIDLA
+CHIRPER - IC telefon
+Na Instapost/marketplace je zakázáno postovat fotky, které se netýkají IC serveru.
+
+Příkaz - /me
+Příkaz slouží k vyjádření činnosti, emocí nebo nálady postavy, které nelze přímo ve hře animovat nebo provést jinak.
+
+PŘÍKLAD: /ME upravuje si kravatu. /ME podává vizitku.
+
+Příkaz - /do
+Příkaz popisuje výsledek vykonané činnosti nebo slouží jako dotaz, na který druhý hráč musí pravdivě odpovědět.
+
+PŘÍKLAD: /DO Jaký je stav pacienta? /DO Jaké jméno je uvedeno na ID?
+
+OOC - Out of Character
+Komunikace mimo hru, nesouvisející s RP.
+
+Slouží k technickým sdělením nebo nezbytným organizačním informacím.
+
+Zákaz zneužívání OOC pro nedůležité či nevhodné informace ve hře.
+
+IC - In Character
+Komunikace a chování v rámci RP – tedy z pohledu vaší postavy.
+
+Jedná se o běžný rozhovor nebo interakci ve hře, která odpovídá vašemu příběhu.
+
+RP - RolePlay
+Znamená hraní určité vymyšlené postavy a jejího příběhu ve fiktivním (herním) světě.
+
+Každý hráč je zde v roli „herce“, který by měl reagovat autenticky a realisticky, tak jak by jednala skutečná osoba v dané situaci.
+
+LOOC Chat/Roblox Chat - Local Out Of Character Chat
+Lokální OOC chat přímo ve hře slouží výhradně ke sdělení důležitých informací mezi hráči.
+
+Není určen pro běžnou konverzaci, vtipy či nadávky.
+
+Na LOOC se vztahují komunitní pravidla, stejně jako na jakoukoli jinou formu komunikace.
+
+PŘÍKLAD: L-OOC Povolujete Gross? L-OOC Schvaluješ CK?
+
+STREAM - Stream Sniping
+Nepřípustné využívání informací získaných ze streamu jiného hráče (např. na Twitchi nebo YouTube) za účelem ovlivnění dění ve hře.
+
+Záměrné vyhledávání postavy podle polohy na streamu
+
+Ovlivňování vývoje RP akcí na základě informací z vysílání
+
+Nabádání ostatních hráčů na základě streamovaných informací
+
+PŘÍKLAD: Ve skutečnosti by nikdo spontánně nepřiběhl na místo přestřelky, pokud o ní nemá žádnou informaci.
+
+META - Metagaming
+Používání informací získaných mimo herní svět (OOC) v herním světě (IC).
+
+Takové chování narušuje hru a je přísně zakázáno.
+
+Používání informací, které vaše postava nemá možnost znát
+
+Přenášení informací mezi různými postavami (v případě multicharu)
+
+Využívání znalostí po Character Killu (CK)
+
+MIXING - Míchání OOC do IC
+Jedná se o nevhodné míchání OOC a IC komunikace, např. přenášení reálných pojmů do hry nebo RPit nereálné výrazy.
+
+PŘÍKLAD: /ME jde se zamyslet (postava nemůže vědomě popsat, že se jde „zamyslet“) VOICE Banánové ostrovy. (nepatří do IC komunikace)
+
+KOS - Kill On Sight
+Zabití hráče bez jakékoli předchozí interakce nebo logického důvodu.
+
+PŘÍKLAD: Postava bezdůvodně ubodá náhodného kolemjdoucího.
+
+Revenge Kill - Pomsta hráči
+Úmyslné napadení hráče za účelem pomsty za předchozí RP konflikt.
+
+Pomsta musí být logicky a RPově připravená, ideálně zrealizovaná jinou postavou.
+
+Minimální čas na zotavení postavy po zranění je 2 hodiny reálného času.
+
+PK - Player Kill
+Stav, kdy postava utrpí zranění nebo upadne do bezvědomí, a tím ztratí krátkodobou paměť.
+
+Po PK si postava nesmí pamatovat události z posledních 10 minut. Později si může postupně začít vzpomínat (např. ve formě flashbacků).
+
+PŘÍKLAD: Postava je udeřena do hlavy a následkem toho upadne do bezvědomí a zapomene část událostí.
+
+Lehká zranění (modřiny, škrábance, povrchové rány): Postava si může ošetřit sama.
+
+Těžká zranění (střelná, bodná poranění): Vyžadují zásah nemocnice nebo certifikovaného Lékaře 
+
+ZÁKLADNÍ INFORMACE
+📄
+Herní pravidla projektu
+INFORMACE NA ZAČÁTEK
+Základní pojmy a pravidla, která využíváme v rámci RolePlay (RP). Na serveru klademe důraz na seriózní a kvalitní RP.
+
+Server ON
+Na server ON bude vždy Hlasování na SSU 
+
+Čas zapnutí serveru si Management vyhrazuje právo změnit podle svých nebo potřeb komunity (např. o víkendu se RP startne dřív a/nebo prodlouží).
+
+Mimo tento nebo daný stanovený čas je zakázáno používat veškeré IC commandy, trestá se.
+
+Obecné zásady
+Dodržování pravidel projektu LastGen je povinností. Porušení může vést k blokaci přístupu.
+
+Vyhrazujeme si právo odepřít přístup k projektu kdykoliv a z jakéhokoliv důvodu. Není nárokem být součástí komunity.
+
+Porušení pravidel jiným hráčem není omluvou pro vaše vlastní prohřešky. Situace řešte pomocí příkazu !mod/!help po ukončení RP scénáře.
+
+Jste zodpovědní za jakékoliv akce, které proběhnou pod vaším účtem – i v případě sdílení PC nebo účtu s jinými osobami.
+
+Povinností hráče je sledovat na Discordu PRAVIDLA UPDATE.
+
+Zakázané chování a činnosti
+Kopírování dokumentů, textů, jakákoliv forma zlodějství, toxické chování nebo reklamní obsah ve hře budou trestány permanentním banem.
+
+Je zakázáno používat cheaty, scripty, externí programy nebo jiné úpravy hry, které poskytují výhodu vůči ostatním hráčům.
+
+Vyhýbání se RP scénářům je zakázáno.
+
+Není povoleno používat vulgární, nevhodná jména nebo názvy obsahující reklamu, a to jak ve hře, tak na Discordu.
+
+Používání slova "Nword" je přísně zakázáno na platformě Discord, uprostřed RP je "Nword" povolený pouze v GangRP. Trestá se permanentním banem.
+
+Chovejte se vhodně k dané situaci a nezkazte RP zážitek ostatním. Rozlišujeme mezi nováčkem a hráčem s neadekvátním přístupem.
+
+V případě bugů:
+
+Pokud bug ovlivňuje hru rozdílně pro obě strany, neERPí se.
+
+Bugy, které hráče NEzvýhodňují, se ERPí.
+
+Je zakázáno jakýmkoliv způsobem obcházet ban (např. tvorbou nových účtů).
+
+Členové státních složek nemají přístup na black market.
+
+Streamování nebo záznam komunikace s administrátory (včetně audia) je zakázáno.
+
+Vydávání se za státní složky (včetně nošení uniforem/nášivek) je zakázáno.
+
+Obecné herní mechaniky a RP pravidla
+CPZ pravidlo: Maximální délka zadržení hráče je 2 hodiny reálného času, během kterých by měl být případ vyřešen.
+
+Vypalování podniků je povoleno pouze po schválení přes ticket. Maximální doba omezení provozu je 3 dny.
+
+Po CK postavy nesmí hráč vstoupit zpět do stejné frakce nebo skupiny po dobu 7 dní.
+
+S multicharem je povoleno mít jednu postavu členem LEO a druhou nelegal. Dbejte na pravidlo METAGAMING.
+
+NOVÉ/UPRAVENÉ PRAVIDLA
+Character Kill
+
+ZÁKLADNÍ PRAVIDLA
+CHIRPER - IC telefon
+Na Instapost/marketplace je zakázáno postovat fotky, které se netýkají IC serveru.
+
+Příkaz - /me
+Příkaz slouží k vyjádření činnosti, emocí nebo nálady postavy, které nelze přímo ve hře animovat nebo provést jinak.
+
+PŘÍKLAD: /ME upravuje si kravatu. /ME podává vizitku.
+
+Příkaz - /do
+Příkaz popisuje výsledek vykonané činnosti nebo slouží jako dotaz, na který druhý hráč musí pravdivě odpovědět.
+
+PŘÍKLAD: /DO Jaký je stav pacienta? /DO Jaké jméno je uvedeno na ID?
+
+OOC - Out of Character
+Komunikace mimo hru, nesouvisející s RP.
+
+Slouží k technickým sdělením nebo nezbytným organizačním informacím.
+
+Zákaz zneužívání OOC pro nedůležité či nevhodné informace ve hře.
+
+IC - In Character
+Komunikace a chování v rámci RP – tedy z pohledu vaší postavy.
+
+Jedná se o běžný rozhovor nebo interakci ve hře, která odpovídá vašemu příběhu.
+
+RP - RolePlay
+Znamená hraní určité vymyšlené postavy a jejího příběhu ve fiktivním (herním) světě.
+
+Každý hráč je zde v roli „herce“, který by měl reagovat autenticky a realisticky, tak jak by jednala skutečná osoba v dané situaci.
+
+LOOC Chat/Roblox Chat - Local Out Of Character Chat
+Lokální OOC chat přímo ve hře slouží výhradně ke sdělení důležitých informací mezi hráči.
+
+Není určen pro běžnou konverzaci, vtipy či nadávky.
+
+Na LOOC se vztahují komunitní pravidla, stejně jako na jakoukoli jinou formu komunikace.
+
+PŘÍKLAD: L-OOC Povolujete Gross? L-OOC Schvaluješ CK?
+
+STREAM - Stream Sniping
+Nepřípustné využívání informací získaných ze streamu jiného hráče (např. na Twitchi nebo YouTube) za účelem ovlivnění dění ve hře.
+
+Záměrné vyhledávání postavy podle polohy na streamu
+
+Ovlivňování vývoje RP akcí na základě informací z vysílání
+
+Nabádání ostatních hráčů na základě streamovaných informací
+
+PŘÍKLAD: Ve skutečnosti by nikdo spontánně nepřiběhl na místo přestřelky, pokud o ní nemá žádnou informaci.
+
+META - Metagaming
+Používání informací získaných mimo herní svět (OOC) v herním světě (IC).
+
+Takové chování narušuje hru a je přísně zakázáno.
+
+Používání informací, které vaše postava nemá možnost znát
+
+Přenášení informací mezi různými postavami (v případě multicharu)
+
+Využívání znalostí po Character Killu (CK)
+
+MIXING - Míchání OOC do IC
+Jedná se o nevhodné míchání OOC a IC komunikace, např. přenášení reálných pojmů do hry nebo RPit nereálné výrazy.
+
+PŘÍKLAD: /ME jde se zamyslet (postava nemůže vědomě popsat, že se jde „zamyslet“) VOICE Banánové ostrovy. (nepatří do IC komunikace)
+
+KOS - Kill On Sight
+Zabití hráče bez jakékoli předchozí interakce nebo logického důvodu.
+
+PŘÍKLAD: Postava bezdůvodně ubodá náhodného kolemjdoucího.
+
+Revenge Kill - Pomsta hráči
+Úmyslné napadení hráče za účelem pomsty za předchozí RP konflikt.
+
+Pomsta musí být logicky a RPově připravená, ideálně zrealizovaná jinou postavou.
+
+Minimální čas na zotavení postavy po zranění je 2 hodiny reálného času.
+
+PK - Player Kill
+Stav, kdy postava utrpí zranění nebo upadne do bezvědomí, a tím ztratí krátkodobou paměť.
+
+Po PK si postava nesmí pamatovat události z posledních 10 minut. Později si může postupně začít vzpomínat (např. ve formě flashbacků).
+
+PŘÍKLAD: Postava je udeřena do hlavy a následkem toho upadne do bezvědomí a zapomene část událostí.
+
+Lehká zranění (modřiny, škrábance, povrchové rány): Postava si může ošetřit sama.
+
+Těžká zranění (střelná, bodná poranění): Vyžadují zásah nemocnice nebo certifikovaného lékaře.
+
+CK - Character Kill
+CK představuje definitivní smrt a ukončení příběhu postavy.
+
+Jedná se o nejzávažnější zásah do RP jiné postavy, a proto musí být CK vždy vnímáno jako krajní řešení, ke kterému vede dostatečně závažný důvod a odpovídající předchozí RP.
+
+CK by nemělo být používáno jako jednoduchý způsob vyřešení konfliktu, zbavení se protivníka nebo trest za jednotlivou situaci. Pokud někomu definitivně ukončujete postavu a její dlouhodobý příběh, měla by tomu odpovídat také kvalita samotné RP situace.
+
+CK má být vyvrcholením příběhu – ne rychlou popravou bez obsahu. Hráči by měli vytvořit odpovídající RP scénu, dát situaci prostor a přistupovat k ní jako k významnému zakončení postavy. V rámci možností by mělo jít o skutečné RP „představení“, které odpovídá závažnosti definitivní smrti charakteru.
+
+Před udělením CK nesmí dojít k převodu majetku/peněz.
+
+SCHÁLENÍ CK
+Každé CK musí být předem schváleno AT prostřednictvím ticketu.
+
+Výjimkou je pouze situační CK, které je upraveno samostatně níže.
+
+Žádost o CK jiné postavy musí být podložena:
+
+dostatečně závažným RP důvodem,
+
+odpovídajícím dlouhodobým RP mezi postavami,
+
+vysvětlením, proč již není možné situaci adekvátně vyřešit méně definitivním způsobem.
+
+CK by tedy mělo představovat poslední možnou eskalaci dlouhodobě budovaného konfliktu, nikoliv jeho začátek.
+
+PROVEDENÍ CK
+Po provedení předem schváleného CK musí být pro jeho platnost oznámeno v herním chatu:
+„CK – jméno postavy“
+
+Po provedení CK je hráč povinen do ticketu, ve kterém proběhlo schválení CK, uvést:
+
+lokaci místa činu,
+
+způsob vraždy nebo příčinu smrti,
+
+informace o případné manipulaci s tělem,
+
+další relevantní informace o průběhu CK.
+
+Poškozený hráč má právo se proti CK odvolat formou ticketu na AT, pokud se domnívá, že bylo provedeno nebo schváleno neoprávněně.
+
+V případě žádosti o CK na člena AT, hráči mohou kontaktovat nezávislého člena AT prostřednictvím soukromé komunikace na Discordu.
+
+NÁVRAT K PŮVODNÍ SKUPINĚ PO CK
+Po obdržení CK je hráči zakázáno vrátit se s novou postavou k nelegální činnosti organizované skupiny, se kterou spolupracovala jeho předchozí postava, pokud AT neurčí jinak.
+
+lze udělit výjimka (ticket)
+
+Povoleny jsou interakce:
+
+běžné seznámení,
+
+sociální interakce,
+
+legální činnosti spojené s danou frakcí nebo skupinou.
+
+Zakázána je však jakákoliv nelegální spolupráce, a to i v roli externího spolupracovníka.
+
+DRUH CK - Self CK
+Pokud chce hráč definitivně ukončit vlastní postavu, musí si nechat SELFCK předem schválit AT.
+
+SELFCK se standardně RPí odletem postavy, pokud AT nepovolí jiný způsob jejího ukončení.
+
+DRUH CK - Jail CK
+Tento typ CK může udělit pouze GOV (Government)
+
+Může proběhnout hlavní soudní líčení, které rozhodne o trestu smrti nebo doživotním vězení včetně CK postavy
+
+Ve výjimečných případech (např. není dostatečný počet hráčů k možnosti hlavního líčení, apod.) může být rozsudek vydán také mimo hlavní líčení
+
+DRUH CK - Situační CK
+Situační CK je výjimečná forma CK, která může vzniknout přímo během neočekávaného vývoje RP situace. Na rozdíl od standardního CK tedy nejde o předem připravené nebo plánované ukončení jiné postavy.
+
+Lze jej udělit pouze v případě, kdy přímo během probíhající situace vznikne nový, mimořádně závažný a bezprostřední RP důvod, který takovou reakci postavy skutečně ospravedlňuje.
+
+Pokud bylo CK, možnost zabití postavy nebo samotná situace vedoucí k CK předem plánována, domlouvána nebo zamýšlena, nejedná se o situační CK. Takové CK musí projít standardním procesem schválení AT.
+
+SITUAČNÍ CK nikdy nesmí sloužit jako způsob, jak obejít povinnost požádat o standardní CK. Pokud hráč již před zahájením situace ví, že jeho cílem je druhé postavě CK udělit, nemůže následně situaci označit za situační CK.
+
+Z Gross RP nelze přejít do situačního CK. Je zakázáno během Gross RP úmyslně způsobit postavě tak závažná zranění nebo následky, které by ji donutily přijmout situační CK. Gross RP nesmí sloužit jako prostředek k vynucení smrti postavy.
+
+PŘÍKLAD SITUAČNÍHO CK
+Při nečekané přestřelce mezi dvěma gangy se moje postava ocitne uprostřed střelby a zasáhne ji kulka do hrudníku. Zranění je natolik vážné, že mu moje postava na místě podlehne. Celá situace vznikla spontánně, bez předchozího plánování, a skončila smrtí mé postavy.
+
+Pokud jsem boss mafie a během RP situace zjistím, že mě jeden z členů zradil, například spolupracuje s policií nebo vynáší informace, můžu mu za určitých podmínek udělit situační CK. Musí ale jít o závažné porušení dlouhodobých pravidel organizace, za které může podle dosavadního RP následovat smrt. Pokud jsem o jeho zradě věděl už předem, nemůžu si jen naplánovat schůzku a dát mu situační CK. V takovém případě musím postupovat přes standardní CK.
+
+PROVEDENÍ SITUAČNÍHO CK
+Před provedením situačního CK není nutné vytvářet ticket ani žádat o přítomnost člena AT.
+
+Situační CK lze provést bez předchozího schválení a bez dohledu AT, pokud jsou splněny všechny podmínky stanovené pravidly.
+
+Po provedení situačního CK je nutné neprodleně založit ticket, ve kterém budou uvedeny stejné náležitosti jako u standardního CK, zejména důvod, průběh situace, místo činu, způsob smrti a případná manipulace s tělem.
+
+Ticket zakládá hráč, jehož postava situační CK obdržela. Výjimkou je situace, kdy situační CK udělil boss frakce nebo druhá strana, ticket zakládá daná osoba.
+
+AT následně posoudí oprávněnost situačního CK na základě uvedených informací a případných důkazů.
+
+Pokud AT zjistí, že bylo CK předem plánované, důvod nevznikl během RP situace nebo nebyl dostatečně závažný, může být situační CK zpětně zrušeno a jednání řešeno jako porušení pravidel serveru.
+
+RDM - Random Death Match
+Neoprávněné a bezdůvodné zabití jednoho nebo více hráčů bez jakékoli předchozí IC interakce.
+
+VDM - Vehicle Death Match
+Úmyslné najetí do hráče, vozidla nebo objektu bez RP důvodu.
+
+PŘÍKLAD: Příkladem je srážení lidí autem v situacích, kdy to není logické ani odůvodněné RP.
+
+INJURIES - Non RP Injuries
+Ignorování nebo vědomé vynechání RP zranění, která by v reálném světě vyžadovala lékařskou péči.
+
+PŘÍKLAD: Po vážné dopravní nehodě postava pokračuje dál, jako by se nic nestalo, bez jakéhokoliv RP následku.
+
+DRIVING - Non RP Driving
+Používání vozu neadekvátním způsobem nebo v podmínkách nevhodných k jízdě daným vozem. V případě nehody vozidla je třeba RPit její rozsah. U menších ťuknutí není třeba přerušit jízdu.
+
+Hráč s autem skočí ze skály a jede dál, jako by se nic nestalo.
+
+Hráč ujíždí do hor po extrémním terénu se sportovním modelem auta apod.
+
+ACTING - Non RP Acting
+Jakékoli jednání, které narušuje lore (příběh a charakter) postavy nebo není v souladu s její funkcí/rolí.
+
+Policista prodávající nebo kradoucí zbraně
+
+Nelegitimní chování z pohledu profese
+
+Nereálné chování při hraní za zvířecí postavu – postava by neměla rozumět lidské řeči
+
+Jakákoli forma korupce (např. v rámci státních frakcí) musí být předem schválena Admin Teamem. Bez schválení je takové chování považováno za Non-RP.
+
+TRASH - Trash RP
+Trash RP označuje nekvalitní, nereálné nebo trollující chování, které narušuje celkový zážitek z roleplaye.
+
+Jedná se o vědomé porušování pravidel, ignoraci herní logiky a nereálné jednání postavy.
+
+Trollování a nesmyslné chování za postavu
+
+Okrádání hráčů uprostřed dne na veřejnosti bez logického důvodu
+
+Chování, které neodpovídá charakteru postavy nebo situaci
+
+Zneužívání herních mechanik pro neférovou výhodu
+
+Ignorování RP pravidel (např. metagaming, powergaming)
+
+Přerušování nebo narušování RP ostatním hráčům
+
+TRASH - Trash Talking
+Vyvolávání konfliktů v LOOC nebo OOC chatu
+
+Hodnocení RP ostatních hráčů mimo ticket systém
+
+Stěžování si na RP přímo ve hře místo řešení of </div>
+</section>
+
+<section class="content" id="ateam">
+  <div class="kicker">VEDENÍ PROJEKTU</div>
+  <h2>Náš A-team<span>.</span></h2>
+
+  <div class="team">
+    <article class="person">
+      <small>PROJECT FOUNDERS</small>
+      <h3>just_whyyy</h3>
+    </article>
+
+    <article class="person">
+      <small>PROJECT FOUNDERS</small>
+      <h3>richard_30083_85594</h3>
+    </article>
+
+    <article class="person">
+      <small>PROJECT MANAGEMENT</small>
+      <h3>swezzxy27</h3>
+    </article>
+
+    <article class="person">
+      <small>HEAD ADMINISTRÁTOR</small>
+      <h3>ondra1338</h3>
+    </article>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Staň se součástí <span>Prague RolePlay.</span></h2>
+  <a class="btn" href="https://discord.gg/MCYBRSv46" target="_blank" rel="noopener">ILEGÁLNÍ DISCORD ↗</a>
+</section>
+
+</main>
+
+<footer>
+  <span>PRAGUE ROLEPLAY © 2026</span>
+  <span>Komunitní roleplay projekt</span>
+</footer>
+
+<div class="cookie" id="cookie">
+  <strong>Nastavení cookies</strong>
+  <p>Vyber, zda souhlasíš s volitelnými cookies. Odmítnutí neomezí přístup na web. Web sám o sobě nezobrazuje IP adresy návštěvníků.</p>
+  <button id="accept">Souhlasím</button>
+  <button id="reject">Odmítnout volitelné</button>
+</div>
+
+<script>
+const menu = document.getElementById('menu');
+
+document.getElementById('menuBtn').onclick = () => {
+  menu.classList.toggle('open');
+};
+
+menu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => menu.classList.remove('open'));
+});
+
+const cookie = document.getElementById('cookie');
+
+if (localStorage.getItem('pragueCookieChoice')) {
+  cookie.style.display = 'none';
+}
+
+function chooseCookies(choice) {
+  localStorage.setItem('pragueCookieChoice', choice);
+  cookie.style.display = 'none';
+}
+
+document.getElementById('accept').onclick = () => chooseCookies('accepted');
+document.getElementById('reject').onclick = () => chooseCookies('rejected');
+</script>
+
+</body>
+</html>
